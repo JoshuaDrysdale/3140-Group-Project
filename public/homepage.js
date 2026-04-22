@@ -1,5 +1,9 @@
 // homepage.js
 document.addEventListener("DOMContentLoaded", async () => {
+  const statusMessage = document.getElementById("status-message");
+  
+  statusMessage.textContent = "Loading categories...";
+  
   const res = await fetch("/api/categories");
   const categories = await res.json();
 
