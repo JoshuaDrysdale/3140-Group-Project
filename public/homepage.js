@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   statusMessage.textContent = "Loading categories...";
   
-  const res = await fetch("/api/categories");
+  try{
+    const res = await fetch("/api/categories");
   const categories = await res.json();
 
   const container = document.getElementById("category-container");
@@ -16,6 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   `).join("");
 
   attachButtonListeners();
+  } catch(error){
+    console.error(error);
+  }
 });
 
 function attachButtonListeners() {
