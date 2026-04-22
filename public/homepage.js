@@ -1,6 +1,15 @@
 // homepage.js
 document.addEventListener("DOMContentLoaded", async () => {
-  const res = await fetch("/api/categories");
+  const statusMessage = document.getElementById("status-message");
+  
+  statusMessage.textContent = "Loading categories...";
+  
+  try{
+    const res = await fetch("/api/categories");
+
+    if(!res.ok){
+      throw new Error("Failed Request"); 
+    }
   const categories = await res.json();
 
   const container = document.getElementById("category-container");
@@ -12,6 +21,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   `).join("");
 
   attachButtonListeners();
+  } catch(error){
+    console.error(error);
+    statusMessage.textContent = "Unable to load categories right now."; 
+  }
 });
 
 function attachButtonListeners() {
