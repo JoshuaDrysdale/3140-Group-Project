@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   attachButtonListeners();
   } catch(error){
     console.error(error);
+    statusMessage.textContent = "Unable to load categories right now."; 
   }
 });
 
