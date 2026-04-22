@@ -1,4 +1,3 @@
-// homepage.js
 document.addEventListener("DOMContentLoaded", async () => {
   const res = await fetch("/api/categories");
   const categories = await res.json();
