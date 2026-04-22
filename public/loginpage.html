@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body class="login-page">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo">🎓 SchoolMart</div>
+
+    <h1>Everything you need<br>for academic success</h1>
+
+    <p class="desc">
+      From textbooks to tech, notebooks to backpacks.
+      Your one-stop shop for all school essentials.
+    </p>
+
+    <div class="features">
+      <div class="feature">🚚 Free Shipping</div>
+      <div class="feature">🔒 Secure Checkout</div>
+      <div class="feature">↩️ Easy Returns</div>
+      <div class="feature">🎧 24/7 Support</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="card">
+
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in to access your cart, orders, and more</p>
+
+      <div class="tabs">
+        <div class="tab active">Sign In</div>
+        <div class="tab">Create Account</div>
+      </div>
+
+      <!-- EMAIL -->
+      <div class="input-group">
+        <span>✉️</span>
+        <input type="text" placeholder="you@example.com">
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="input-group">
+        <span>🔒</span>
+        <input type="password" id="password" placeholder="Password">
+        <span class="eye" onclick="togglePassword()">👁️</span>
+      </div>
+
+      <div class="options">
+        <label><input type="checkbox"> Keep me signed in</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button class="main-btn">Sign In</button>
+
+      <p class="divider">OR CONTINUE WITH</p>
+
+      <div class="socials">
+        <button class="social-btn">Google</button>
+        <button class="social-btn">GitHub</button>
+      </div>
+
+      <p class="footer">
+        By continuing, you agree to Terms & Privacy Policy
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("password");
+      input.type = input.type === "password" ? "text" : "password";
+    }
+  </script>
+
+</body>
+</html>

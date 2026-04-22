@@ -7,7 +7,7 @@
 - subcategory pages
 - css styling
 - images added
-
+- create a login/signup page
 
 ## Run
 npm install
