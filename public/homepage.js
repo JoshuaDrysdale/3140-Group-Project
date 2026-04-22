@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   try{
     const res = await fetch("/api/categories");
+
+    if(!res.ok){
+      throw new Error("Failed Request"); 
+    }
   const categories = await res.json();
 
   const container = document.getElementById("category-container");
