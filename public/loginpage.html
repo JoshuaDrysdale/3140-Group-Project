@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
+
   <link rel="stylesheet" href="login.css">
 </head>
 
 <body class="login-page">
-
-  <!-- LEFT -->
+<!-- LEFT SIDE -->
   <div class="left">
     <div class="logo">🎓 SchoolMart</div>
 
@@ -26,59 +26,51 @@
       <div class="feature">🎧 24/7 Support</div>
     </div>
   </div>
-
-  <!-- RIGHT -->
+  
+  <!-- RIGHT SIDE -->
   <div class="right">
     <div class="card">
 
       <h2>Welcome back</h2>
-      <p class="subtitle">Sign in to access your cart, orders, and more</p>
+      <p class="subtitle">Sign in to continue</p>
 
+      <!-- TABS -->
       <div class="tabs">
-        <div class="tab active">Sign In</div>
-        <div class="tab">Create Account</div>
+        <div class="tab active" id="login-tab">Sign In</div>
+        <div class="tab" id="signup-tab">Create Account</div>
       </div>
 
-      <!-- EMAIL -->
-      <div class="input-group">
-        <span>✉️</span>
-        <input type="text" placeholder="you@example.com">
-      </div>
+      <!-- LOGIN -->
+       <form id="login-form">
+        <input type="text" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button type="submit" class="main-btn">Sign In</button>
+       </form>
 
-      <!-- PASSWORD -->
-      <div class="input-group">
-        <span>🔒</span>
-        <input type="password" id="password" placeholder="Password">
-        <span class="eye" onclick="togglePassword()">👁️</span>
-      </div>
 
-      <div class="options">
-        <label><input type="checkbox"> Keep me signed in</label>
-        <a href="#">Forgot password?</a>
-      </div>
-
-      <button class="main-btn">Sign In</button>
+      <!-- SIGNUP -->
+      <form id="signup-form" class="hidden">
+        <input type="text" id="signup-name" placeholder="Full Name">
+        <input type="text" id="signup-email" placeholder="Email">
+        <input type="password" id="signup-password" placeholder="Password">
+        <button type="submit" class="main-btn">Create Account</button>
+      </form>
+ 
 
       <p class="divider">OR CONTINUE WITH</p>
 
       <div class="socials">
-        <button class="social-btn">Google</button>
-        <button class="social-btn">GitHub</button>
-      </div>
+        <button class="social-btn">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
+          Google
+        </button>
 
-      <p class="footer">
-        By continuing, you agree to Terms & Privacy Policy
-      </p>
+      </div>
 
     </div>
   </div>
 
-  <script>
-    function togglePassword() {
-      const input = document.getElementById("password");
-      input.type = input.type === "password" ? "text" : "password";
-    }
-  </script>
+  <script src="loginpage.js"></script>
 
 </body>
 </html>
