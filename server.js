@@ -16,6 +16,7 @@ app.get("/api/categories", async (req, res) => {
     .select("*");
 
   if (error){
+    console.error("SUPABASE ERROR:", error);
     return res.status(500).json(error);
   };
 
