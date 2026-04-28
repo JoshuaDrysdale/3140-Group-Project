@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw new Error("Failed Request"); 
     }
   const categories = await res.json();
+  console.log(categories)
 
   const container = document.getElementById("category-container");
 
