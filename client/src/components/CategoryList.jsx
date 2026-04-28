@@ -13,8 +13,12 @@ export default function CategoryList() {
         if (!res.ok) throw new Error("Failed to load categories");
         
         const data = await res.json();
+
+        console.log("Here is the data I received:", data);
+
         setCategories(data);
       } catch (err) {
+        console.error("DEBUGGING ERROR:", err);
         setError("Unable to load categories right now.");
       } finally {
         setLoading(false);

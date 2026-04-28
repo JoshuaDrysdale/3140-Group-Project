@@ -1,29 +1,25 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
-const supabase = require("./db");
 const app = express();
+const db = require("./db"); // Import as 'db' to match your function call
+
 app.use(express.json());
 
-app.get("/", (req,res) =>{
-    res.sendFile(path.join(__dirname, "/public/homepage.html"))
+// API Endpoint: Keep this, it's perfect!
+app.get('/api/categories', async (req, res) => {
+    try {
+        const categories = await db.getCategories(); 
+        res.json(categories);
+    } catch (error) {
+        console.error("Database error:", error); // Helpful for debugging
+        res.status(500).json({ error: "Failed to fetch categories" });
+    }
 });
 
-//database endpoint
-app.get("/api/categories", async (req, res) => {
-  const { data, error } = await supabase
-    .from("categories")
-    .select("*");
+// REMOVED the static file serving for now to avoid confusion
+// We will add the React production build logic here later.
 
-  if (error){
-    console.error("SUPABASE ERROR:", error);
-    return res.status(500).json(error);
-  };
-
-  res.json(data);
-});
-
-app.use(express.static("public"));
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
