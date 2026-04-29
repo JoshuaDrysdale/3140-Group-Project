@@ -1,41 +1,57 @@
 const { useState, useEffect } = React;
 
+const CLOUDINARY_CONFIG = {
+  cloudName: "",
+  folder: "schoolmart-products",
+  transformations: "f_auto,q_auto,w_500"
+};
+
+function getImageUrl(fileName) {
+  if (!CLOUDINARY_CONFIG.cloudName) {
+    return `images/${fileName}`;
+  }
+
+  const folderPath = CLOUDINARY_CONFIG.folder ? `${CLOUDINARY_CONFIG.folder}/` : "";
+
+  return `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/${CLOUDINARY_CONFIG.transformations}/${folderPath}${fileName}`;
+}
+
 const PRODUCT_DATA = {
   pencils: [
-    { name: "Mechanical Pencil", price: "$5", image: "images/mechanical_pencil.jpeg" },
-    { name: "Color Pencil Set", price: "$3", image: "images/color_pensilset.jpeg" },
-    { name: "Drawing Pencil Kit", price: "$8", image: "images/drawing_pencilkit.jpeg" }
+    { name: "Mechanical Pencil", price: "$5", image: "mechanical_pencil.jpeg" },
+    { name: "Color Pencil Set", price: "$3", image: "color_pensilset.jpeg" },
+    { name: "Drawing Pencil Kit", price: "$8", image: "drawing_pencilkit.jpeg" }
   ],
   pens: [
-    { name: "Gel Pen", price: "$3", image: "images/gel_pen.jpeg" },
-    { name: "Blue Ink Pen", price: "$5", image: "images/blueink_pen.jpeg" },
-    { name: "Red Ink Pen", price: "$6", image: "images/redink_pen.jpeg" }
+    { name: "Gel Pen", price: "$3", image: "gel_pen.jpeg" },
+    { name: "Blue Ink Pen", price: "$5", image: "blueink_pen.jpeg" },
+    { name: "Red Ink Pen", price: "$6", image: "redink_pen.jpeg" }
   ],
   calculators: [
-    { name: "Basic Calculator", price: "$10", image: "images/basic_calculator.jpeg" },
-    { name: "Scientific Calculator", price: "$20", image: "images/scientific_calculator.jpeg" },
-    { name: "Graphing Calculator", price: "$50", image: "images/graphing_calculator.jpeg" },
-    { name: "Solar Calculator", price: "$15", image: "images/solar_calculator.jpeg" },
-    { name: "Financial Calculator", price: "$30", image: "images/financial_calculator.jpeg" },
-    { name: "Mini Pocket Calculator", price: "$8", image: "images/mini-pocket_calculator.jpeg" }
+    { name: "Basic Calculator", price: "$10", image: "basic_calculator.jpeg" },
+    { name: "Scientific Calculator", price: "$20", image: "scientific_calculator.jpeg" },
+    { name: "Graphing Calculator", price: "$50", image: "graphing_calculator.jpeg" },
+    { name: "Solar Calculator", price: "$15", image: "solar_calculator.jpeg" },
+    { name: "Financial Calculator", price: "$30", image: "financial_calculator.jpeg" },
+    { name: "Mini Pocket Calculator", price: "$8", image: "mini-pocket_calculator.jpeg" }
   ],
   erasers: [
-    { name: "Kneaded Eraser", price: "$2", image: "images/kneaded_eraser.jpeg" },
-    { name: "Art Eraser Set", price: "$4", image: "images/art_eraserset.jpeg" },
-    { name: "Mini Erasers Pack", price: "$2.5", image: "images/mini_eraserspack.jpeg" },
-    { name: "Dust-Free Eraser", price: "$3", image: "images/dust-free_eraser.jpeg" }
+    { name: "Kneaded Eraser", price: "$2", image: "kneaded_eraser.jpeg" },
+    { name: "Art Eraser Set", price: "$4", image: "art_eraserset.jpeg" },
+    { name: "Mini Erasers Pack", price: "$2.5", image: "mini_eraserspack.jpeg" },
+    { name: "Dust-Free Eraser", price: "$3", image: "dust-free_eraser.jpeg" }
   ],
   notebooks: [
-    { name: "Spiral Notebook", price: "$3", image: "images/spiral_notebook.jpeg" },
-    { name: "Composition Notebook", price: "$2.5", image: "images/composition_notebook.jpeg" },
-    { name: "Hardcover Notebook", price: "$6", image: "images/hardcover_notebook.jpeg" },
-    { name: "Mini Notebook", price: "$2", image: "images/mini_notebook.jpeg" },
-    { name: "College Ruled Notebook", price: "$3.5", image: "images/college-ruled_notebook.jpeg" }
+    { name: "Spiral Notebook", price: "$3", image: "spiral_notebook.jpeg" },
+    { name: "Composition Notebook", price: "$2.5", image: "composition_notebook.jpeg" },
+    { name: "Hardcover Notebook", price: "$6", image: "hardcover_notebook.jpeg" },
+    { name: "Mini Notebook", price: "$2", image: "mini_notebook.jpeg" },
+    { name: "College Ruled Notebook", price: "$3.5", image: "college-ruled_notebook.jpeg" }
   ],
   rulers: [
-    { name: "Plastic Ruler", price: "$2", image: "images/plastic_ruler.jpeg" },
-    { name: "Metal Ruler", price: "$5", image: "images/metal_ruler.jpeg" },
-    { name: "Flexible Ruler", price: "$3", image: "images/flexible_ruler.jpeg" }
+    { name: "Plastic Ruler", price: "$2", image: "plastic_ruler.jpeg" },
+    { name: "Metal Ruler", price: "$5", image: "metal_ruler.jpeg" },
+    { name: "Flexible Ruler", price: "$3", image: "flexible_ruler.jpeg" }
   ]
 };
 
@@ -55,6 +71,7 @@ function getProductList() {
       category,
       categoryLabel: CATEGORY_LABELS[category],
       id: `${category}-${product.name.toLowerCase().replaceAll(" ", "-")}`,
+      image: getImageUrl(product.image),
       rating: (4.4 + ((index + category.length) % 5) / 10).toFixed(1),
       reviews: 80 + category.length * 14 + index * 31,
       badge: index === 0 ? "Best Seller" : index === 1 ? "Student Pick" : "Fast Ship"
@@ -344,7 +361,7 @@ function StoreView({ user, onLogout }) {
           <h1>Build your perfect class kit.</h1>
           <span>Save on writing tools, notebooks, calculators, and desk basics.</span>
         </div>
-        <img src="images/spiral_notebook.jpeg" alt="Spiral notebook" />
+        <img src={getImageUrl("spiral_notebook.jpeg")} alt="Spiral notebook" />
       </section>
 
       {error && <p className="soft-alert">{error}</p>}
