@@ -12,6 +12,6 @@
 ## Run
 npm install
 
-nodemon server.js
+npm run dev
 
 http://localhost:3000
