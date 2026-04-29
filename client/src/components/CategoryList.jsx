@@ -33,10 +33,11 @@ export default function CategoryList() {
   };
 
   return (
-    <div id="category-container">
+    <div className="categories">
       {categories.map((cat) => (
         <button 
-          key={cat.id} 
+          key={cat.id}
+          id={cat.name.toLowerCase()}
           onClick={() => handleCategoryClick(cat.name)}
         >
           {cat.name}
