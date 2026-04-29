@@ -16,6 +16,17 @@ app.get('/api/categories', async (req, res) => {
     }
 });
 
+app.get('/api/products/:category', async (req, res) => {
+  try {
+    const category = req.params.category;
+    // Use your existing db.js function
+    const products = await db.getProductsByCategory(category);
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
 // REMOVED the static file serving for now to avoid confusion
 // We will add the React production build logic here later.
 
