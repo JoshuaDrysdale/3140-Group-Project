@@ -39,14 +39,36 @@ const PRODUCT_DATA = {
   ]
 };
 
-const CATEGORY_COLORS = {
-  pencils: "#f59e0b",
-  pens: "#2563eb",
-  calculators: "#7c3aed",
-  erasers: "#dc2626",
-  notebooks: "#059669",
-  rulers: "#92400e"
+const CATEGORY_LABELS = {
+  pencils: "Pencils",
+  pens: "Pens",
+  calculators: "Calculators",
+  erasers: "Erasers",
+  notebooks: "Notebooks",
+  rulers: "Rulers"
 };
+
+function getProductList() {
+  return Object.entries(PRODUCT_DATA).flatMap(([category, products]) =>
+    products.map((product, index) => ({
+      ...product,
+      category,
+      categoryLabel: CATEGORY_LABELS[category],
+      id: `${category}-${product.name.toLowerCase().replaceAll(" ", "-")}`,
+      rating: (4.4 + ((index + category.length) % 5) / 10).toFixed(1),
+      reviews: 80 + category.length * 14 + index * 31,
+      badge: index === 0 ? "Best Seller" : index === 1 ? "Student Pick" : "Fast Ship"
+    }))
+  );
+}
+
+function parsePrice(price) {
+  return Number(price.replace("$", ""));
+}
+
+function formatMoney(value) {
+  return `$${value.toFixed(2).replace(".00", "")}`;
+}
 
 function LoginView({ onLogin }) {
   const [mode, setMode] = useState("login");
@@ -93,26 +115,31 @@ function LoginView({ onLogin }) {
   }
 
   return (
-    <main className="login-layout">
-      <section className="login-info">
-        <div className="brand">SchoolMart</div>
-        <h1>Everything you need for academic success</h1>
-        <p>From notebooks to calculators, shop school essentials in one place.</p>
+    <main className="login-page">
+      <section className="left">
+        <div className="logo">SchoolMart</div>
+
+        <h1>Everything you need<br />for academic success</h1>
+
+        <p className="desc">
+          From textbooks to tech, notebooks to backpacks.
+          Your one-stop shop for all school essentials.
+        </p>
+
         <div className="features">
-          <span>Free shipping</span>
-          <span>Secure checkout</span>
-          <span>Easy returns</span>
-          <span>Student support</span>
+          <div className="feature">Free Shipping</div>
+          <div className="feature">Secure Checkout</div>
+          <div className="feature">Easy Returns</div>
+          <div className="feature">24/7 Support</div>
         </div>
       </section>
 
-      <section className="auth-panel" aria-label="Authentication">
-        <h2>{mode === "login" ? "Welcome back" : "Create account"}</h2>
-        <p className="subtitle">
-          {mode === "login" ? "Sign in to continue" : "Start shopping faster"}
-        </p>
+      <section className="right">
+        <div className="card">
+          <h2>Welcome back</h2>
+          <p className="subtitle">Sign in to continue</p>
 
-        <div className="tabs">
+          <div className="tabs">
           <button
             type="button"
             className={mode === "login" ? "tab active" : "tab"}
@@ -127,64 +154,73 @@ function LoginView({ onLogin }) {
           >
             Create Account
           </button>
+          </div>
+
+          {mode === "login" ? (
+            <form onSubmit={handleLogin} className="auth-form">
+              <input name="email" type="email" placeholder="Email" />
+              <input name="password" type="password" placeholder="Password" />
+              <button type="submit" className="main-btn">Sign In</button>
+            </form>
+          ) : (
+            <form onSubmit={handleSignup} className="auth-form">
+              <input name="name" type="text" placeholder="Full Name" />
+              <input name="email" type="email" placeholder="Email" />
+              <input name="password" type="password" placeholder="Password" />
+              <button type="submit" className="main-btn">Create Account</button>
+            </form>
+          )}
+
+          <p className="divider">OR CONTINUE WITH</p>
+
+          <div className="socials">
+            <button type="button" className="social-btn">
+              Google
+            </button>
+          </div>
+
+          {message && <p className="form-message">{message}</p>}
         </div>
-
-        {mode === "login" ? (
-          <form onSubmit={handleLogin} className="auth-form">
-            <input name="email" type="email" placeholder="Email" />
-            <input name="password" type="password" placeholder="Password" />
-            <button type="submit" className="primary-btn">Sign In</button>
-          </form>
-        ) : (
-          <form onSubmit={handleSignup} className="auth-form">
-            <input name="name" type="text" placeholder="Full Name" />
-            <input name="email" type="email" placeholder="Email" />
-            <input name="password" type="password" placeholder="Password" />
-            <button type="submit" className="primary-btn">Create Account</button>
-          </form>
-        )}
-
-        {message && <p className="form-message">{message}</p>}
       </section>
     </main>
-  );
-}
-
-function CategoryButton({ category, onSelect }) {
-  const categoryKey = category.name.toLowerCase();
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(category)}
-      style={{ background: CATEGORY_COLORS[categoryKey] || "#334155" }}
-      id={categoryKey}
-      className="category-button"
-    >
-      {category.name}
-    </button>
   );
 }
 
 function ProductCard({ product, onAdd }) {
   return (
     <article className="product-card">
-      <img src={product.image} alt={product.name} />
-      <h2>{product.name}</h2>
-      <p>{product.price}</p>
-      <button type="button" onClick={() => onAdd(product)}>
-        Add to Cart
-      </button>
+      <div className="product-media">
+        <span className="product-badge">{product.badge}</span>
+        <img src={product.image} alt={product.name} />
+      </div>
+      <div className="product-info">
+        <p className="product-category">{product.categoryLabel}</p>
+        <h3>{product.name}</h3>
+        <div className="rating-row">
+          <span className="stars">5 stars</span>
+          <span>{product.rating}</span>
+          <span>({product.reviews})</span>
+        </div>
+        <p className="shipping">Free delivery with SchoolMart Plus</p>
+        <div className="buy-row">
+          <p className="price">{product.price}</p>
+          <button type="button" onClick={() => onAdd(product)}>
+            Add to Cart
+          </button>
+        </div>
+      </div>
     </article>
   );
 }
 
 function StoreView({ user, onLogout }) {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [cartCount, setCartCount] = useState(0);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [cartItems, setCartItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const products = getProductList();
 
   useEffect(() => {
     async function loadCategories() {
@@ -194,7 +230,13 @@ function StoreView({ user, onLogout }) {
         const data = await response.json();
         setCategories(data);
       } catch (err) {
-        setError(err.message || "Unable to load categories");
+        setError("Using local categories while the database is unavailable.");
+        setCategories(
+          Object.keys(PRODUCT_DATA).map((key) => ({
+            id: key,
+            name: CATEGORY_LABELS[key]
+          }))
+        );
       } finally {
         setLoading(false);
       }
@@ -203,72 +245,181 @@ function StoreView({ user, onLogout }) {
     loadCategories();
   }, []);
 
-  const selectedProducts = selectedCategory
-    ? PRODUCT_DATA[selectedCategory.name.toLowerCase()] || []
-    : [];
+  function addToCart(product) {
+    setCartItems((items) => {
+      const existingItem = items.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        return items.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+
+      return [...items, { ...product, quantity: 1 }];
+    });
+  }
+
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = activeCategory === "all" || product.category === activeCategory;
+    const searchText = `${product.name} ${product.categoryLabel}`.toLowerCase();
+    const matchesSearch = searchText.includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + parsePrice(item.price) * item.quantity,
+    0
+  );
 
   return (
-    <main className="store-shell">
-      <header className="store-header">
-        <div>
-          <p className="eyebrow">SchoolMart</p>
-          <h1>Stationery Store</h1>
+    <main className="shop-page">
+      <header className="shop-header">
+        <button type="button" className="logo-button" onClick={() => setActiveCategory("all")}>
+          SchoolMart
+        </button>
+
+        <div className="search-wrap">
+          <select
+            aria-label="Category"
+            value={activeCategory}
+            onChange={(event) => setActiveCategory(event.target.value)}
+          >
+            <option value="all">All</option>
+            {categories.map((category) => {
+              const key = category.name.toLowerCase();
+              return (
+                <option key={category.id} value={key}>
+                  {category.name}
+                </option>
+              );
+            })}
+          </select>
+          <input
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Search pencils, notebooks, calculators"
+          />
+          <button type="button" className="search-btn">Search</button>
         </div>
-        <div className="header-actions">
-          <span className="cart-count">Cart: {cartCount}</span>
-          <span className="user-name">{user.name}</span>
-          <button type="button" className="secondary-btn" onClick={onLogout}>
-            Sign Out
-          </button>
+
+        <div className="account-actions">
+          <div className="account-copy">
+            <span>Hello, {user.name}</span>
+            <button type="button" onClick={onLogout}>Sign Out</button>
+          </div>
+          <div className="cart-pill">
+            <span>{cartCount}</span>
+            <strong>Cart</strong>
+          </div>
         </div>
       </header>
 
-      {selectedCategory ? (
-        <section>
-          <div className="section-heading">
+      <nav className="category-nav" aria-label="Shop categories">
+        <button
+          type="button"
+          className={activeCategory === "all" ? "active" : ""}
+          onClick={() => setActiveCategory("all")}
+        >
+          All Departments
+        </button>
+        {categories.map((category) => {
+          const key = category.name.toLowerCase();
+          return (
             <button
               type="button"
-              className="secondary-btn"
-              onClick={() => setSelectedCategory(null)}
+              key={category.id}
+              className={activeCategory === key ? "active" : ""}
+              onClick={() => setActiveCategory(key)}
             >
-              Back to Categories
+              {category.name}
             </button>
-            <h2>{selectedCategory.name}</h2>
+          );
+        })}
+      </nav>
+
+      <section className="promo-banner">
+        <div>
+          <p>Back-to-school event</p>
+          <h1>Build your perfect class kit.</h1>
+          <span>Save on writing tools, notebooks, calculators, and desk basics.</span>
+        </div>
+        <img src="images/spiral_notebook.jpeg" alt="Spiral notebook" />
+      </section>
+
+      {error && <p className="soft-alert">{error}</p>}
+
+      <section className="shop-layout">
+        <aside className="sidebar">
+          <h2>Departments</h2>
+          <button
+            type="button"
+            className={activeCategory === "all" ? "active" : ""}
+            onClick={() => setActiveCategory("all")}
+          >
+            All Products
+          </button>
+          {categories.map((category) => {
+            const key = category.name.toLowerCase();
+            return (
+              <button
+                type="button"
+                key={category.id}
+                className={activeCategory === key ? "active" : ""}
+                onClick={() => setActiveCategory(key)}
+              >
+                {category.name}
+              </button>
+            );
+          })}
+        </aside>
+
+        <section className="product-section">
+          <div className="section-bar">
+            <div>
+              <p>{loading ? "Loading products" : `${filteredProducts.length} products`}</p>
+              <h2>
+                {activeCategory === "all" ? "Featured supplies" : CATEGORY_LABELS[activeCategory]}
+              </h2>
+            </div>
+            <span>Sorted by Featured</span>
           </div>
+
           <div className="products">
-            {selectedProducts.length > 0 ? (
-              selectedProducts.map((product) => (
-                <ProductCard
-                  key={product.name}
-                  product={product}
-                  onAdd={() => setCartCount((count) => count + 1)}
-                />
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} onAdd={addToCart} />
               ))
             ) : (
-              <p>No products available for this category.</p>
+              <p className="empty-state">No products match your search.</p>
             )}
           </div>
         </section>
-      ) : (
-        <section>
-          <div className="section-heading">
-            <h2>Categories</h2>
-          </div>
-          {loading && <p>Loading categories...</p>}
-          {error && <p className="error-message">{error}</p>}
-          {!loading && !error && (
-            <div id="category-container" className="categories">
-              {categories.map((category) => (
-                <CategoryButton
-                  key={category.id}
-                  category={category}
-                  onSelect={setSelectedCategory}
-                />
+
+        <aside className="cart-summary">
+          <h2>Cart Summary</h2>
+          {cartItems.length === 0 ? (
+            <p className="empty-cart">Your cart is empty.</p>
+          ) : (
+            <div className="cart-list">
+              {cartItems.slice(0, 4).map((item) => (
+                <div className="cart-line" key={item.id}>
+                  <span>{item.quantity}x</span>
+                  <p>{item.name}</p>
+                  <strong>{formatMoney(parsePrice(item.price) * item.quantity)}</strong>
+                </div>
               ))}
             </div>
           )}
-        </section>
-      )}
+          <div className="cart-total">
+            <span>Total</span>
+            <strong>{formatMoney(cartTotal)}</strong>
+          </div>
+          <button type="button" className="checkout-btn" disabled={cartItems.length === 0}>
+            Checkout
+          </button>
+        </aside>
+      </section>
     </main>
   );
 }
