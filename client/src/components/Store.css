@@ -1,0 +1,27 @@
+.store {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.store-banner {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.store-banner h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+  color: #f5c518;
+}
+.store-banner p {
+  font-size: 16px;
+  color: #ccc;
+}
+.store-section-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: #222;
+}

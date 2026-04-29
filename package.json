@@ -2,11 +2,11 @@
   "name": "3140-group-project",
   "version": "1.0.0",
   "description": "3140 Group Project",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node server/server.js",
+    "dev": "concurrently \"npm start\" \"cd client && npm run dev\""
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,11 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.104.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.14"
   }
 }

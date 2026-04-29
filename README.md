@@ -4,14 +4,27 @@
 # StudentMart
 
 # Done so far
-- subcategory pages
+- React single page app
 - css styling
 - images added
 - create a login/signup page
 
 ## Run
 npm install
+npm run dev
 
-nodemon server.js
 
-http://localhost:3000
+## Cloudinary Images
+Product images are Cloudinary-ready in `client/app.js`.
+
+After uploading images to Cloudinary, update:
+
+```js
+const CLOUDINARY_CONFIG = {
+  cloudName: "your-cloud-name",
+  folder: "schoolmart-products",
+  transformations: "f_auto,q_auto,w_500"
+};
+```
+
+If `cloudName` is empty, the app uses local images from `client/images`.

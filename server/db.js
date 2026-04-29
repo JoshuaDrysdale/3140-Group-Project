@@ -1,6 +1,3 @@
-// This tells Node.js to ignore the invalid certificate warning
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 require("dotenv").config();
 const { createClient } = require('@supabase/supabase-js');
 
