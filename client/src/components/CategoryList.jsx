@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./CategoryList.css"
+
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // This replaces your 'DOMContentLoaded' event listener
     const fetchCategories = async () => {
       try {
         const res = await fetch("/api/categories");
         if (!res.ok) throw new Error("Failed to load categories");
-        
         const data = await res.json();
         setCategories(data);
       } catch (err) {
@@ -20,22 +21,20 @@ export default function CategoryList() {
         setLoading(false);
       }
     };
-
     fetchCategories();
-  }, []); // The empty array [] means this runs only once when the component mounts
+  }, []);
 
   if (loading) return <p>Loading categories...</p>;
   if (error) return <p>{error}</p>;
 
   const handleCategoryClick = (name) => {
-    // This replaces your 'attachButtonListeners' logic
-    window.location.href = `/sub-categories/${name.toLowerCase()}.html`;
+    navigate(`/category/${name.toLowerCase()}`);
   };
 
   return (
     <div className="categories">
       {categories.map((cat) => (
-        <button 
+        <button
           key={cat.id}
           id={cat.name.toLowerCase()}
           onClick={() => handleCategoryClick(cat.name)}

@@ -11,10 +11,8 @@
 
 ## Run
 npm install
-
 npm run dev
 
-http://localhost:3000
 
 ## Cloudinary Images
 Product images are Cloudinary-ready in `client/app.js`.
