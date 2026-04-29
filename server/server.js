@@ -25,6 +25,14 @@ app.get("/api/categories", async (req, res) => {
   res.json(data);
 });
 
+app.use((req, res, next) => {
+  if (req.method !== "GET" || req.path.startsWith("/api/")) {
+    return next();
+  }
+
+  res.sendFile(path.join(clientPath, "index.html"));
+});
+
 app.listen(PORT, (error) => {
   if (error) {
     console.error("Failed to start server:", error.message);

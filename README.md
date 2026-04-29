@@ -4,7 +4,7 @@
 # StudentMart
 
 # Done so far
-- subcategory pages
+- React single page app
 - css styling
 - images added
 - create a login/signup page
