@@ -1,9 +1,27 @@
 require("dotenv").config();
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// Initialize the client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+module.exports = {
+  // We export the client itself so server.js can use .from()
+  supabase, 
+  
+  // We export your helpers
+  getCategories: async () => {
+    const { data, error } = await supabase.from('categories').select('*');
+    if (error) throw error;
+    return data;
+  },
 
-module.exports = supabase;
+  getProductsByCategory: async (categoryName) => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, categories!inner(name)')
+      .ilike('categories.name', categoryName);
+
+    if (error) throw error;
+    return data;
+  }
+};

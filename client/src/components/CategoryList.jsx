@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import "./CategoryList.css"
+import { Link } from 'react-router-dom'; // Added Link import
+import "./CategoryList.css";
 
 export default function CategoryList() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -16,6 +15,7 @@ export default function CategoryList() {
         const data = await res.json();
         setCategories(data);
       } catch (err) {
+        console.error("DEBUGGING ERROR:", err);
         setError("Unable to load categories right now.");
       } finally {
         setLoading(false);
@@ -27,21 +27,22 @@ export default function CategoryList() {
   if (loading) return <p>Loading categories...</p>;
   if (error) return <p>{error}</p>;
 
-  const handleCategoryClick = (name) => {
-    navigate(`/category/${name.toLowerCase()}`);
-  };
-
-  return (
-    <div className="categories">
-      {categories.map((cat) => (
-        <button
-          key={cat.id}
+return (
+  <div className="categories">
+    {categories.length === 0 ? (
+      <p>No categories found in the database.</p>
+    ) : (
+      categories.map((cat) => (
+        <Link 
+          key={cat.id} 
+          to={`/sub-categories/${cat.name.toLowerCase()}`}
+          className="category-button"
           id={cat.name.toLowerCase()}
-          onClick={() => handleCategoryClick(cat.name)}
         >
           {cat.name}
-        </button>
-      ))}
-    </div>
-  );
+        </Link>
+      ))
+    )}
+  </div>
+);
 }

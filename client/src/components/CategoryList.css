@@ -130,3 +130,20 @@ button:active {
         padding: 14px;
     }
 }
+
+#category-container {
+  display: flex;        /* Aligns items side-by-side */
+  justify-content: center;  /* Centers items horizontally */
+  align-items: center;      /* Centers items vertically (optional) */
+  gap: 20px;            /* This adds 20px of space between each link */
+  padding: 10px;
+}
+
+/* Optional: style the links themselves */
+#category-container a {
+  text-decoration: none; /* Removes the underline */
+  color: blue;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
