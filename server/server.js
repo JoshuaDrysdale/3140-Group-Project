@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 // 1. Rename this to 'db' to match your exports
@@ -8,6 +9,7 @@ const db = require("./db");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const clientPath = path.join(__dirname, "../client");
+const SALT_ROUNDS = 10;
 
 app.use(express.json());
 app.use(express.static(clientPath));
@@ -33,6 +35,64 @@ app.get("/api/products/:category", async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/signup", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Name, email, and password are required.' });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+  }
+
+  try {
+    const existingUser = await db.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered.' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const user = await db.createUser(name, email, passwordHash);
+    return res.status(201).json({ user });
+  } catch (error) {
+    console.error("Signup Error:", error.message);
+    return res.status(500).json({ error: 'Failed to create user.' });
+  }
+});
+
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required.' });
+  }
+
+  try {
+    const user = await db.getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    const isValid = await bcrypt.compare(password, user.password_hash);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      created_at: user.created_at
+    };
+
+    return res.json({ user: safeUser });
+  } catch (error) {
+    console.error("Login Error:", error.message);
+    return res.status(500).json({ error: 'Failed to login.' });
   }
 });
 // SPA Middleware: Keeps React Router working on refresh
