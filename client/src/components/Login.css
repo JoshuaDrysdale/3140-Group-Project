@@ -45,6 +45,21 @@
   color: white;
 }
 
+/* ERROR MESSAGES */
+.login-page .error {
+  color: #ef4444;
+  font-size: 14px;
+  margin: 4px 0;
+  text-align: left;
+}
+
+.login-page .status {
+  color: #34d399;
+  font-size: 14px;
+  margin: 6px 0;
+  text-align: left;
+}
+
 /* BUTTON */
 .login-page .main-btn {
   width: 100%;
@@ -75,24 +90,18 @@
   display: none;
 }
 
-/* SOCIAL */
-.login-page .socials {
-  display: flex;
-  gap: 10px;
-}
-
-.login-page .social-btn {
-  flex: 1;
-  padding: 8px;
-  background: #1f2937;
+/* GUEST BUTTON */
+.login-page .guest-btn {
+  width: 100%;
+  padding: 10px;
+  background: #374151;
   border: none;
   border-radius: 6px;
   color: white;
-  display: flex;
-  justify-content: center;
-  gap: 6px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.login-page .social-btn img {
-  width: 16px;
+.login-page .guest-btn:hover {
+  background: #4b5563;
 }
