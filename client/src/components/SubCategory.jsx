@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import ProductCard from './ProductCard';
 
-export default function SubCategory() {
+export default function SubCategory({ onAddToCart }) {
   const { id } = useParams(); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,13 +35,19 @@ export default function SubCategory() {
   if (products.length === 0) return <p>No products found in {id}.</p>;
 
   return (
-    <div>
-      <h1>Products in {id}</h1>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>{product.name} - ${product.price}</li>
-        ))}
-      </ul>
-    </div>
-  );
+      <div className="subcategory-container">
+        <h1 className="subcategory-title">Products in {id}</h1>
+        
+        {/* Grid container to wrap your product cards */}
+        <div className="products">
+          {products.map((product) => (
+            <ProductCard 
+              key={product.id} 
+              product={product} 
+              onAddToCart={onAddToCart} 
+            />
+          ))}
+        </div>
+      </div>
+    );
 }

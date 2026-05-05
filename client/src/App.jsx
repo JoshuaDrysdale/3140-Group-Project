@@ -88,8 +88,8 @@ function App() {
 
           <Route 
             path="/sub-categories/:id" 
-            element={user ? <SubCategory /> : <Navigate to="/" />} 
-          />
+            element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} 
+          />  
         </Routes>
       </div>
     </BrowserRouter>
