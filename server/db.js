@@ -15,6 +15,19 @@ module.exports = {
     return data;
   },
 
+  getProducts: async () => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, categories(name)')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+    return data.map((product) => ({
+      ...product,
+      category: product.categories?.name?.trim()
+    }));
+  },
+
   getProductsByCategory: async (categoryName) => {
     const { data, error } = await supabase
       .from('products')
@@ -22,7 +35,10 @@ module.exports = {
       .ilike('categories.name', categoryName);
 
     if (error) throw error;
-    return data;
+    return data.map((product) => ({
+      ...product,
+      category: product.categories?.name?.trim()
+    }));
   },
 
   createUser: async (name, email, passwordHash) => {

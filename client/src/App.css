@@ -1,0 +1,10 @@
+.App {
+  min-height: 100vh;
+}
+
+.page-state {
+  max-width: 1180px;
+  margin: 28px auto;
+  padding: 0 24px;
+  color: #52637a;
+}

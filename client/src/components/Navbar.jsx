@@ -1,18 +1,41 @@
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-export default function Navbar({ user, cartCount, onCartClick, onLogout }) {
+export default function Navbar({
+  user,
+  cartCount,
+  onCartClick,
+  onLogout,
+  searchQuery,
+  onSearchChange
+}) {
   const navigate = useNavigate();
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    navigate('/store');
+  };
+
   return (
-    <nav className="navbar">
-      <div className="navbar-logo" onClick={() => navigate('/store')}>🎓 SchoolMart</div>
-      <div className="navbar-search">
-        <input type="text" placeholder="Search for school supplies..." />
-        <button>🔍</button>
-      </div>
+    <nav className="navbar" aria-label="Main shopping navigation">
+      <button className="navbar-logo" onClick={() => navigate('/store')}>
+        <span className="logo-mark">S</span>
+        <span>SchoolMart</span>
+      </button>
+      <form className="navbar-search" onSubmit={handleSearchSubmit}>
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Search notebooks, calculators, backpacks..."
+        />
+        <button type="submit" aria-label="Search">Search</button>
+      </form>
       <div className="navbar-right">
-        <span className="navbar-user">👋 {user.name}</span>
-        <button className="cart-btn" onClick={onCartClick}>🛒 Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}</button>
+        <span className="navbar-user">Hi, {user.name}</span>
+        <button className="cart-btn" onClick={onCartClick}>
+          Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+        </button>
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
     </nav>

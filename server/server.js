@@ -8,7 +8,7 @@ const db = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const clientPath = path.join(__dirname, "../client");
+const clientPath = path.join(__dirname, "../client/dist");
 const SALT_ROUNDS = 10;
 
 app.use(express.json());
@@ -25,6 +25,16 @@ app.get("/api/categories", async (req, res) => {
     // you would have to type: await db.supabase.from("categories")...
     
     console.error("Database Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/products", async (req, res) => {
+  try {
+    const data = await db.getProducts();
+    res.json(data);
+  } catch (error) {
+    console.error("Products Error:", error.message);
     res.status(500).json({ error: error.message });
   }
 });

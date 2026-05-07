@@ -7,7 +7,7 @@ export default function Cart({ cart, onAdd, onRemove, onClose }) {
     <div className="cart-overlay">
       <div className="cart-sidebar">
         <div className="cart-header">
-          <h2>🛒 Your Cart</h2>
+          <h2>Your Cart</h2>
           <button onClick={onClose}>✕</button>
         </div>
         {cart.length === 0 ? (
@@ -17,10 +17,14 @@ export default function Cart({ cart, onAdd, onRemove, onClose }) {
             <div className="cart-items">
               {cart.map((item, idx) => (
                 <div className="cart-item" key={idx}>
-                  <img src={`/images/${item.image}`} alt={item.name} />
+                  {item.image_url ? (
+                    <img src={item.image_url} alt={item.name} />
+                  ) : (
+                    <div className="cart-image-fallback" aria-hidden="true">No image</div>
+                  )}
                   <div className="cart-item-info">
                     <p className="cart-item-name">{item.name}</p>
-                    <p className="cart-item-price">${item.price}</p>
+                    <p className="cart-item-price">${Number(item.price).toFixed(2)}</p>
                     <div className="cart-item-controls">
                       <button onClick={() => onRemove(item)}>−</button>
                       <span>{item.qty}</span>

@@ -28,15 +28,21 @@ export default function SubCategory({ onAddToCart }) {
       });
   }, [id]);
 
-  if (loading) return <p>Loading products for {id}...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>; // 3. Display error
+  const title = id.replaceAll("-", " ");
+
+  if (loading) return <p className="page-state">Loading products for {title}...</p>;
+  if (error) return <p className="page-state">{error}</p>; // 3. Display error
   
   // Optional: Handle empty state
-  if (products.length === 0) return <p>No products found in {id}.</p>;
+  if (products.length === 0) return <p className="page-state">No products found in {title}.</p>;
 
   return (
       <div className="subcategory-container">
-        <h1 className="subcategory-title">Products in {id}</h1>
+        <div className="subcategory-header">
+          <p className="subcategory-kicker">Department</p>
+          <h1 className="subcategory-title">{title}</h1>
+          <span>{products.length} items available</span>
+        </div>
         
         {/* Grid container to wrap your product cards */}
         <div className="products">

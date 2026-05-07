@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-// Components from both branches
 import Login from './components/Login';
 import Store from './components/Store';
-import CategoryPage from './components/CategoryPage';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
-import CategoryList from './components/CategoryList';
 import SubCategory from './components/SubCategory';
 
 import './App.css';
@@ -16,6 +13,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Cart Logic
   const addToCart = (item) => {
@@ -50,7 +48,12 @@ function App() {
             user={user} 
             cartCount={totalItems} 
             onCartClick={() => setCartOpen(!cartOpen)} 
-            onLogout={() => setUser(null)} 
+            onLogout={() => {
+              setUser(null);
+              setSearchQuery('');
+            }}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
           />
         )}
         
@@ -73,19 +76,15 @@ function App() {
           {/* Protected Routes */}
           <Route 
             path="/store" 
-            element={user ? <Store /> : <Navigate to="/" />} 
+            element={user ? (
+              <Store
+                onAddToCart={addToCart}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
+            ) : <Navigate to="/" />}
           />
           
-          <Route 
-            path="/categories" 
-            element={user ? <CategoryList /> : <Navigate to="/" />} 
-          />
-
-          <Route 
-            path="/category/:category" 
-            element={user ? <CategoryPage onAddToCart={addToCart} cart={cart} /> : <Navigate to="/" />} 
-          />
-
           <Route 
             path="/sub-categories/:id" 
             element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} 
