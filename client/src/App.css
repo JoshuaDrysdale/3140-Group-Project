@@ -2,6 +2,21 @@
   min-height: 100vh;
 }
 
+.toast-notification {
+  position: fixed;
+  left: 50%;
+  top: 18px;
+  transform: translateX(-50%);
+  z-index: 300;
+  background: rgba(15, 95, 153, 0.96);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 16px 36px rgba(15, 95, 153, 0.18);
+}
+
 .page-state {
   max-width: 1180px;
   margin: 28px auto;

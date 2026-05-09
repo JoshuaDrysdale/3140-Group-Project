@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bcrypt = require("bcrypt");
+const Stripe = require("stripe");
 require("dotenv").config();
 
 // 1. Rename this to 'db' to match your exports
@@ -10,6 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const clientPath = path.join(__dirname, "../client/dist");
 const SALT_ROUNDS = 10;
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
 app.use(express.json());
 app.use(express.static(clientPath));
@@ -45,6 +48,47 @@ app.get("/api/products/:category", async (req, res) => {
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/create-checkout-session", async (req, res) => {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return res.status(500).json({ error: 'Stripe secret key is not configured.' });
+  }
+
+  const { cart, shipping } = req.body;
+  if (!Array.isArray(cart) || cart.length === 0) {
+    return res.status(400).json({ error: 'Cart must include at least one item.' });
+  }
+
+  try {
+    const line_items = cart.map(item => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.name,
+          description: item.category || undefined,
+        },
+        unit_amount: Math.round(Number(item.price) * 100),
+      },
+      quantity: item.qty,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items,
+      mode: 'payment',
+      success_url: `${CLIENT_URL}/store?checkout=success`,
+      cancel_url: `${CLIENT_URL}/store?checkout=cancel`,
+      metadata: {
+        shipping: JSON.stringify(shipping || {}),
+      },
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Stripe Checkout Error:', error);
+    res.status(500).json({ error: 'Unable to create Stripe checkout session.' });
   }
 });
 
