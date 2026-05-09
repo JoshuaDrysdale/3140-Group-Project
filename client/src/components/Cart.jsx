@@ -1,6 +1,6 @@
 import './Cart.css';
 
-export default function Cart({ cart, onAdd, onRemove, onClose }) {
+export default function Cart({ cart, onAdd, onRemove, onClose, onCheckout }) {
   const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
 
   return (
@@ -36,7 +36,7 @@ export default function Cart({ cart, onAdd, onRemove, onClose }) {
             </div>
             <div className="cart-footer">
               <div className="cart-total">Total: <strong>${total.toFixed(2)}</strong></div>
-              <button className="checkout-btn">Checkout</button>
+              <button className="checkout-btn" onClick={onCheckout}>Checkout</button>
             </div>
           </>
         )}
