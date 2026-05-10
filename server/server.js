@@ -149,13 +149,6 @@ app.post("/api/login", async (req, res) => {
     return res.status(500).json({ error: 'Failed to login.' });
   }
 });
-// SPA Middleware: Keeps React Router working on refresh
-app.use((req, res, next) => {
-  if (req.method !== "GET" || req.path.startsWith("/api/")) {
-    return next();
-  }
-  res.sendFile(path.join(clientPath, "index.html"));
-});
 
 // POST: Save a new order after checkout
 app.post("/api/orders", async (req, res) => {
@@ -194,6 +187,75 @@ app.patch("/api/orders/:id/status", async (req, res) => {
   }
 });
 
+// REVIEWS
+app.get("/api/reviews/:productId", async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const { data, error } = await db.supabase
+      .from("reviews")
+      .select("*")
+      .eq("product_id", productId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("Reviews Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/reviews", async (req, res) => {
+  const {
+    product_id,
+    product_name,
+    user_name,
+    rating,
+    comment
+  } = req.body;
+
+  if (!product_id || !product_name || !user_name || !rating || !comment) {
+    return res.status(400).json({
+      error: "All fields are required."
+    });
+  }
+
+  try {
+    const { data, error } = await db.supabase
+      .from("reviews")
+      .insert([
+        {
+          product_id,
+          product_name,
+          user_name,
+          rating,
+          comment
+        }
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(201).json(data[0]);
+  } catch (error) {
+    console.error("Create Review Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// SPA Middleware: Keeps React Router working on refresh
+app.use((req, res, next) => {
+  if (req.method !== "GET" || req.path.startsWith("/api/")) {
+    return next();
+  }
+  res.sendFile(path.join(clientPath, "index.html"));
+});
 
 
 app.listen(PORT, (error) => {
