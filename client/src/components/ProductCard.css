@@ -174,3 +174,79 @@
     grid-template-columns: 1fr;
   }
 }
+
+.review-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #d9e8f3;
+}
+
+.review-section h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #162d42;
+}
+
+.review-average {
+  margin: 0 0 8px;
+  color: #0a6fae;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-form input,
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #c8dce9;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.review-form textarea {
+  min-height: 54px;
+  resize: vertical;
+}
+
+.review-form button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #0a6fae;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.review-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.review-item {
+  padding: 8px;
+  background: #f4f9fd;
+  border: 1px solid #d9e8f3;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.review-item span {
+  display: block;
+  color: #0a6fae;
+  font-weight: 800;
+}
+
+.review-item p {
+  margin: 4px 0 0;
+  color: #334;
+}

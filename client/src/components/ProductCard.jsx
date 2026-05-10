@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProductCard.css';
+import ReviewSection from "./ReviewSection";
 
 export default function ProductCard({ product, onAddToCart }) {
   const imageSrc = product.image_url;
@@ -33,6 +34,7 @@ export default function ProductCard({ product, onAddToCart }) {
         >
           Add to Cart
         </button>
+        <ReviewSection product={product} />
       </div>
     </div>
   );
