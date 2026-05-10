@@ -8,6 +8,7 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import SubCategory from './components/SubCategory';
 import OrderConfirmation from './components/OrderConfirmation';
+import OrderHistory from './components/OrderHistory';
 
 import './App.css';
 
@@ -16,6 +17,7 @@ function App() {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
+
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -24,7 +26,7 @@ function App() {
   const [toastOpen, setToastOpen] = useState(false);
   const toastTimeoutRef = useRef(null);
 
-  // Persist user to localStorage whenever it changes
+  // Persist user to localStorage
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -33,19 +35,22 @@ function App() {
     }
   }, [user]);
 
+  // Persist cart to temp_cart so it survives the redirect from Stripe
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem('temp_cart', JSON.stringify(cart));
+    }
+  }, [cart]);
+
   const showToast = (message) => {
     setToastMessage(message);
     setToastOpen(true);
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     toastTimeoutRef.current = setTimeout(() => {
       setToastOpen(false);
-      toastTimeoutRef.current = null;
     }, 1800);
   };
 
-  // Cart Logic
   const addToCart = (item) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id && i.category === item.category);
@@ -62,13 +67,12 @@ function App() {
   const removeFromCart = (item) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id && i.category === item.category);
+      if (!existing) return prev;
       if (existing.qty === 1) return prev.filter(i => !(i.id === item.id && i.category === item.category));
       return prev.map(i => i.id === item.id && i.category === item.category
         ? { ...i, qty: i.qty - 1 } : i);
     });
   };
-
-  const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
 
   return (
     <BrowserRouter>
@@ -87,34 +91,42 @@ function App() {
         setCheckoutOpen={setCheckoutOpen} 
         toastMessage={toastMessage} 
         toastOpen={toastOpen} 
-        showToast={showToast} 
       />
     </BrowserRouter>
   );
 }
 
-function AppRoutes({ user, setUser, cart, setCart, addToCart, removeFromCart, searchQuery, setSearchQuery, cartOpen, setCartOpen, checkoutOpen, setCheckoutOpen, toastMessage, toastOpen, showToast }) {
+function AppRoutes({ 
+  user, setUser, cart, setCart, addToCart, removeFromCart, 
+  searchQuery, setSearchQuery, cartOpen, setCartOpen, 
+  checkoutOpen, setCheckoutOpen, toastMessage, toastOpen 
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const totalItems = cart.reduce((sum, i) => sum + i.qty, 0);
 
+  // Inside AppRoutes in App.jsx
   useEffect(() => {
     const params = new URLSearchParams(location.search);
+    
     if (params.get('checkout') === 'success') {
+      console.log("Stripe Success! Moving to confirmation...");
+
+      // 1. Clear the "live" cart state so the UI updates
       setCart([]);
       setCheckoutOpen(false);
       setCartOpen(false);
-      window.history.replaceState({}, document.title, '/store');
-      navigate('/order-confirmation');
+
+      // 2. Just go to the confirmation page. 
+      // We won't pass state here; OrderConfirmation will check localStorage itself.
+      navigate('/order-confirmation', { replace: true });
     }
-  }, [location.search, navigate, setCart, setCheckoutOpen, setCartOpen]);
+  }, [location.search]);
 
   return (
     <div className="App">
-        {/* Render Navbar and Cart only if user is logged in */}
-        {toastOpen && (
-          <div className="toast-notification">{toastMessage}</div>
-        )}
+        {toastOpen && <div className="toast-notification">{toastMessage}</div>}
+        
         {user && (
           <Navbar 
             user={user} 
@@ -151,33 +163,11 @@ function AppRoutes({ user, setUser, cart, setCart, addToCart, removeFromCart, se
         )}
 
         <Routes>
-          {/* Auth Logic: If not logged in, show Login. If logged in, go to Store */}
-          <Route 
-            path="/" 
-            element={user ? <Navigate to="/store" /> : <Login onLogin={setUser} />} 
-          />
-
-          {/* Protected Routes */}
-          <Route 
-            path="/store" 
-            element={user ? (
-              <Store
-                onAddToCart={addToCart}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-              />
-            ) : <Navigate to="/" />}
-          />
-          
-          <Route 
-            path="/sub-categories/:id" 
-            element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} 
-          />
-
-          <Route 
-            path="/order-confirmation" 
-            element={user ? <OrderConfirmation user={user} /> : <Navigate to="/" />} 
-          />
+          <Route path="/" element={user ? <Navigate to="/store" /> : <Login onLogin={setUser} />} />
+          <Route path="/store" element={user ? <Store onAddToCart={addToCart} searchQuery={searchQuery} onSearchChange={setSearchQuery} /> : <Navigate to="/" />} />
+          <Route path="/sub-categories/:id" element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} />
+          <Route path="/history" element={user ? <OrderHistory user={user} /> : <Navigate to="/" />} />
+          <Route path="/order-confirmation" element={user ? <OrderConfirmation user={user} /> : <Navigate to="/" />} />
         </Routes>
       </div>
     );

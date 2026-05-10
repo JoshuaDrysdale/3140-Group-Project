@@ -157,6 +157,45 @@ app.use((req, res, next) => {
   res.sendFile(path.join(clientPath, "index.html"));
 });
 
+// POST: Save a new order after checkout
+app.post("/api/orders", async (req, res) => {
+  console.log("Order attempt for user:", req.body.userId);
+  try {
+    const order = await db.createOrder(req.body);
+    console.log("✅ Order created in DB:", order.id);
+    res.status(201).json(order);
+  } catch (error) {
+    // THIS LOG IS THE MOST IMPORTANT PART
+    console.error("❌ DATABASE INSERT FAILED:", error.message);
+    console.error("DEBUG DETAILS:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET: Fetch all orders for a specific user
+app.get("/api/orders/user/:userId", async (req, res) => {
+  try {
+    const orders = await db.getOrdersByUserId(req.params.userId);
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching history:", error.message);
+    res.status(500).json({ error: "Failed to load order history" });
+  }
+});
+
+// PATCH: Update status (Useful if you build an admin panel later)
+app.patch("/api/orders/:id/status", async (req, res) => {
+  const { status } = req.body;
+  try {
+    const updatedOrder = await db.updateOrderStatus(req.params.id, status);
+    res.json(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update status" });
+  }
+});
+
+
+
 app.listen(PORT, (error) => {
   if (error) {
     console.error("Failed to start server:", error.message);
@@ -164,3 +203,4 @@ app.listen(PORT, (error) => {
   }
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

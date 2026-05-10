@@ -142,3 +142,34 @@
     display: none;
   }
 }
+
+/* Style for the "My Orders" link in the Navbar */
+.nav-link {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  color: #eaf7ff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none; /* Removes the default underline */
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* Ensure it behaves well in the flex container */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+

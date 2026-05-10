@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Navbar.css';
 
 export default function Navbar({
@@ -33,6 +33,7 @@ export default function Navbar({
       </form>
       <div className="navbar-right">
         <span className="navbar-user">Hi, {user.name}</span>
+        <Link to="/history" className="nav-link">My Orders</Link>
         <button className="cart-btn" onClick={onCartClick}>
           Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </button>
