@@ -1,9 +1,124 @@
 require("dotenv").config();
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// Initialize the client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+module.exports = {
+  // We export the client itself so server.js can use .from()
+  supabase,
 
-module.exports = supabase;
+  // We export your helpers
+  getCategories: async () => {
+    const { data, error } = await supabase.from('categories').select('*');
+    if (error) throw error;
+    return data;
+  },
+
+  getProducts: async () => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, categories(name)')
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+    return data.map((product) => ({
+      ...product,
+      category: product.categories?.name?.trim()
+    }));
+  },
+
+  getProductsByCategory: async (categoryName) => {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, categories!inner(name)')
+      .ilike('categories.name', categoryName);
+
+    if (error) throw error;
+    return data.map((product) => ({
+      ...product,
+      category: product.categories?.name?.trim()
+    }));
+  },
+
+  createUser: async (name, email, passwordHash) => {
+    const { data, error } = await supabase
+      .from('users')
+      .insert([{ name, email, password_hash: passwordHash }])
+      .select('id,name,email,created_at')
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  createOrder: async (orderData) => {
+    const { userId, sessionId, total, items } = orderData;
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([{
+        user_id: userId,
+        stripe_session_id: sessionId,
+        total_amount: total,
+        items: items, // Expecting an array of objects
+        status: 'Processing'
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  getOrdersByUserId: async (userId) => {
+    if (!userId || userId === 'undefined') return []; // Safety check
+    
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  updateOrderStatus: async (orderId, newStatus) => {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  getUserByEmail: async (email) => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id,name,email,password_hash,created_at')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  updateUser: async (id, { name, email }) => {
+    const updates = {};
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+
+    const { data, error } = await supabase
+      .from('users')
+      .update(updates)
+      .eq('id', id)
+      .select('id, name, email, created_at')
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+};

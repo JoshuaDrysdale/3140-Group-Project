@@ -1,0 +1,252 @@
+.subcategory-container {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 52px;
+}
+
+.subcategory-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #d7e8f5;
+  border-radius: 8px;
+}
+
+.subcategory-kicker {
+  grid-column: 1 / -1;
+  margin: 0 0 -4px;
+  color: #0b72b7;
+  font-size: 13px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.subcategory-title {
+  margin: 0;
+  color: #152e45;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.05;
+  text-transform: capitalize;
+}
+
+.subcategory-header span {
+  color: #64758a;
+  font-weight: 700;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  min-height: 390px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #d9e8f3;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 9px 24px rgba(31, 92, 137, 0.08);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.product-card:hover {
+  border-color: #7cc8f1;
+  box-shadow: 0 15px 30px rgba(31, 92, 137, 0.14);
+  transform: translateY(-2px);
+}
+
+.product-card::before {
+  content: "SchoolMart pick";
+  display: block;
+  padding: 8px 12px;
+  color: #0d5d91;
+  background: #e8f7ff;
+  border-bottom: 1px solid #d9eefb;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.product-image-container {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f4f9fd;
+  border-bottom: 1px solid #edf4fa;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 14px;
+}
+
+.product-image-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #6f8499;
+  background: #f4f9fd;
+}
+
+.fallback-icon {
+  font-size: 34px;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px;
+}
+
+.product-title {
+  min-height: 46px;
+  margin: 0;
+  color: #162d42;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.product-rating {
+  margin: 0;
+  color: #0a6fae;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.product-rating span {
+  margin-left: 6px;
+  color: #2e8f57;
+  font-weight: 750;
+}
+
+.product-price {
+  margin: 0;
+  color: #0e2133;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.product-shipping {
+  margin: 0;
+  color: #617286;
+  font-size: 13px;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  min-height: 42px;
+  margin-top: auto;
+  color: #073858;
+  background: #bde9ff;
+  border: 1px solid #9ddcff;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 850;
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #9ddcff;
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 560px) {
+  .subcategory-container {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .subcategory-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+.review-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #d9e8f3;
+}
+
+.review-section h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: #162d42;
+}
+
+.review-average {
+  margin: 0 0 8px;
+  color: #0a6fae;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-form input,
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #c8dce9;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.review-form textarea {
+  min-height: 54px;
+  resize: vertical;
+}
+
+.review-form button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #0a6fae;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.review-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.review-item {
+  padding: 8px;
+  background: #f4f9fd;
+  border: 1px solid #d9e8f3;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.review-item span {
+  display: block;
+  color: #0a6fae;
+  font-weight: 800;
+}
+
+.review-item p {
+  margin: 4px 0 0;
+  color: #334;
+}
