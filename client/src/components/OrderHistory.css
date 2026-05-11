@@ -1,0 +1,74 @@
+.history-page {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: left;
+}
+
+.history-page h1 {
+    margin-bottom: 30px;
+    color: #1a1a1a;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background: white;
+    border: 1px solid #e1e8ed;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.order-header {
+    background: #f8f9fa;
+    padding: 15px 25px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid #e1e8ed;
+}
+
+.order-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #657786;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.order-value {
+    font-weight: 600;
+    color: #14171a;
+    margin: 0;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Dynamic colors for status */
+.status-badge.processing { background: #fff4e5; color: #ff9800; }
+.status-badge.shipped { background: #e3f2fd; color: #2196f3; }
+.status-badge.delivered { background: #e8f5e9; color: #4caf50; }
+
+.order-items {
+    padding: 20px 25px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 15px;
+}
+
+.history-item:last-child { border-bottom: none; }

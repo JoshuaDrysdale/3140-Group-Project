@@ -165,6 +165,105 @@ app.put("/api/edit/:id", async (req, res) => {
     console.error("Edit Error:", error.message);
     return res.status(500).json({ error: "Failed to update profile." });
   }
+  });
+
+// POST: Save a new order after checkout
+app.post("/api/orders", async (req, res) => {
+  console.log("Order attempt for user:", req.body.userId);
+  try {
+    const order = await db.createOrder(req.body);
+    console.log("✅ Order created in DB:", order.id);
+    res.status(201).json(order);
+  } catch (error) {
+    // THIS LOG IS THE MOST IMPORTANT PART
+    console.error("❌ DATABASE INSERT FAILED:", error.message);
+    console.error("DEBUG DETAILS:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET: Fetch all orders for a specific user
+app.get("/api/orders/user/:userId", async (req, res) => {
+  try {
+    const orders = await db.getOrdersByUserId(req.params.userId);
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching history:", error.message);
+    res.status(500).json({ error: "Failed to load order history" });
+  }
+});
+
+// PATCH: Update status (Useful if you build an admin panel later)
+app.patch("/api/orders/:id/status", async (req, res) => {
+  const { status } = req.body;
+  try {
+    const updatedOrder = await db.updateOrderStatus(req.params.id, status);
+    res.json(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update status" });
+  }
+});
+
+// REVIEWS
+app.get("/api/reviews/:productId", async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const { data, error } = await db.supabase
+      .from("reviews")
+      .select("*")
+      .eq("product_id", productId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("Reviews Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/api/reviews", async (req, res) => {
+  const {
+    product_id,
+    product_name,
+    user_name,
+    rating,
+    comment
+  } = req.body;
+
+  if (!product_id || !product_name || !user_name || !rating || !comment) {
+    return res.status(400).json({
+      error: "All fields are required."
+    });
+  }
+
+  try {
+    const { data, error } = await db.supabase
+      .from("reviews")
+      .insert([
+        {
+          product_id,
+          product_name,
+          user_name,
+          rating,
+          comment
+        }
+      ])
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(201).json(data[0]);
+  } catch (error) {
+    console.error("Create Review Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // SPA Middleware: Keeps React Router working on refresh
@@ -175,6 +274,7 @@ app.use((req, res, next) => {
   res.sendFile(path.join(clientPath, "index.html"));
 });
 
+
 app.listen(PORT, (error) => {
   if (error) {
     console.error("Failed to start server:", error.message);
@@ -182,3 +282,4 @@ app.listen(PORT, (error) => {
   }
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

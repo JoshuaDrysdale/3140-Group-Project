@@ -52,6 +52,49 @@ module.exports = {
     return data;
   },
 
+  createOrder: async (orderData) => {
+    const { userId, sessionId, total, items } = orderData;
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([{
+        user_id: userId,
+        stripe_session_id: sessionId,
+        total_amount: total,
+        items: items, // Expecting an array of objects
+        status: 'Processing'
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
+  getOrdersByUserId: async (userId) => {
+    if (!userId || userId === 'undefined') return []; // Safety check
+    
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  updateOrderStatus: async (orderId, newStatus) => {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  },
+
   getUserByEmail: async (email) => {
     const { data, error } = await supabase
       .from('users')
