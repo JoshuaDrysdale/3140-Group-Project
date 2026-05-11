@@ -164,6 +164,7 @@ function AppRoutes({
         )}
 
         <Routes>
+          <Route path="/profile" element={user ? <Profile user={user} setUser={setUser} /> : <Navigate to="/" />} />
           <Route path="/" element={user ? <Navigate to="/store" /> : <Login onLogin={setUser} />} />
           <Route path="/store" element={user ? <Store onAddToCart={addToCart} searchQuery={searchQuery} onSearchChange={setSearchQuery} /> : <Navigate to="/" />} />
           <Route path="/sub-categories/:id" element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} />
