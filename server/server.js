@@ -149,6 +149,24 @@ app.post("/api/login", async (req, res) => {
     return res.status(500).json({ error: 'Failed to login.' });
   }
 });
+
+app.put("/api/edit/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, email } = req.body;
+
+  if (!name && !email) {
+    return res.status(400).json({ error: "Please provide a name or email to update." });
+  }
+
+  try {
+    const user = await db.updateUser(id, { name, email });
+    return res.json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Edit Error:", error.message);
+    return res.status(500).json({ error: "Failed to update profile." });
+  }
+});
+
 // SPA Middleware: Keeps React Router working on refresh
 app.use((req, res, next) => {
   if (req.method !== "GET" || req.path.startsWith("/api/")) {

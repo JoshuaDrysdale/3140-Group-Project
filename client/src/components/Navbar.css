@@ -118,6 +118,24 @@
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
+.profile-nav-btn {
+  background: transparent;
+  color: #f0f2f5;
+  border: 1.5px solid #f0f2f5;
+  border-radius: 6px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.profile-nav-btn:hover {
+  background: #f5c518;
+  border-color: #f5c518;
+  color: #1a1d2e;
+}
+
 @media (max-width: 850px) {
   .navbar {
     grid-template-columns: 1fr auto;

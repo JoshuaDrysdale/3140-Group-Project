@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Store from './components/Store';
 import Navbar from './components/Navbar';
+import Profile from './components/Profile';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import SubCategory from './components/SubCategory';
@@ -122,6 +123,11 @@ function App() {
             path="/sub-categories/:id" 
             element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} 
           />  
+
+          <Route
+            path="/profile"
+            element={user ? <Profile user={user} setUser={setUser} /> : <Navigate to="/" />}
+          />
         </Routes>
       </div>
     </BrowserRouter>

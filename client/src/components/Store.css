@@ -228,6 +228,34 @@
   border-color: #1173b5;
 }
 
+.sort-control {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0 0 16px;
+  margin-bottom: 8px;
+}
+
+.sort-control button {
+  min-height: 38px;
+  padding: 0 14px;
+  color: #24516f;
+  background: #edf8ff;
+  border: 1px solid #cce9fa;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 850;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sort-control button.active,
+.sort-control button:hover {
+  color: #ffffff;
+  background: #1173b5;
+  border-color: #1173b5;
+}
+
 @media (max-width: 780px) {
   .store {
     width: min(100% - 24px, 1180px);

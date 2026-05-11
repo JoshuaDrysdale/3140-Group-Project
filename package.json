@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/JoshuaDrysdale/3140-Group-Project#readme",
   "dependencies": {
-    "@supabase/supabase-js": "^2.104.0",
+    "@supabase/supabase-js": "^2.105.4",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

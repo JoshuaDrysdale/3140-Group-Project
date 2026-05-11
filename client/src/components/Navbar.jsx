@@ -36,6 +36,7 @@ export default function Navbar({
         <button className="cart-btn" onClick={onCartClick}>
           Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </button>
+        <button className="profile-nav-btn" onClick={() => navigate('/profile')}>👤 Profile</button>
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
     </nav>

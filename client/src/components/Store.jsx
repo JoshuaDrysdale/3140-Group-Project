@@ -7,6 +7,7 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productError, setProductError] = useState(null);
+  const [sortBy, setSortBy] = useState('default');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,13 +34,20 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
-  const visibleProducts = products.filter((product) => {
-    const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
-    const searchText = `${product.name} ${product.category || ''}`.toLowerCase();
-    const matchesSearch = normalizedSearch === '' || searchText.includes(normalizedSearch);
-
-    return matchesCategory && matchesSearch;
-  });
+  const visibleProducts = products
+    .filter((product) => {
+      const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+      const searchText = `${product.name} ${product.category || ''}`.toLowerCase();
+      const matchesSearch = normalizedSearch === '' || searchText.includes(normalizedSearch);
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'price-asc') return a.price - b.price;
+      if (sortBy === 'price-desc') return b.price - a.price;
+      if (sortBy === 'rating-desc') return (b.rating || 0) - (a.rating || 0);
+      if (sortBy === 'rating-asc') return (a.rating || 0) - (b.rating || 0);
+      return 0;
+    });
 
   return (
     <div className="store">
@@ -74,7 +82,15 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
               </button>
             ))}
           </div>
+          
         )}
+
+        <div className="sort-control">
+          <button onClick={() => setSortBy('default')} className={sortBy === 'default' ? 'active' : ''}>Default</button>
+          <button onClick={() => setSortBy('price-asc')} className={sortBy === 'price-asc' ? 'active' : ''}>Price: Low to High</button>
+          <button onClick={() => setSortBy('price-desc')} className={sortBy === 'price-desc' ? 'active' : ''}>Price: High to Low</button>
+          <button onClick={() => setSortBy('rating-desc')} className={sortBy === 'rating-desc' ? 'active' : ''}>Top Rated</button>
+        </div>
 
         {loadingProducts && <p className="page-state">Loading the shelf...</p>}
         {productError && <p className="page-state">{productError}</p>}
