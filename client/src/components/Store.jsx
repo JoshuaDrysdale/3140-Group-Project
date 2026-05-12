@@ -17,7 +17,26 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
         const res = await fetch('/api/products');
         if (!res.ok) throw new Error('Failed to load products');
         const data = await res.json();
-        setProducts(data);
+
+        const productsWithRatings = await Promise.all(
+          data.map(async (product) => {
+            const reviewRes = await fetch(`/api/reviews/${product.id}`);
+            const reviews = await reviewRes.json();
+
+            const averageRating =
+              reviews.length > 0
+                ? reviews.reduce((sum, review) => sum + Number(review.rating), 0) / reviews.length
+                : 0;
+
+            return {
+              ...product,
+              averageRating,
+              reviewCount: reviews.length
+            };
+          })
+        );
+
+        setProducts(productsWithRatings);
       } catch (error) {
         console.error('Failed to fetch all products', error);
         setProductError('Unable to load products right now.');
@@ -46,8 +65,8 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
     .sort((a, b) => {
       if (sortBy === 'price-asc') return a.price - b.price;
       if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'rating-desc') return (b.rating || 0) - (a.rating || 0);
-      if (sortBy === 'rating-asc') return (a.rating || 0) - (b.rating || 0);
+      if (sortBy === 'rating-desc') return (b.averageRating || 0) - (a.averageRating || 0);
+      if (sortBy === 'rating-asc') return (a.averageRating || 0) - (b.averageRating || 0);
       return 0;
     });
 
@@ -84,7 +103,7 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
               </button>
             ))}
           </div>
-          
+
         )}
 
         <div className="sort-control">
@@ -100,22 +119,24 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
           <p className="page-state">No products found. Try a different search or category.</p>
         )}
         {!loadingProducts && !productError && visibleProducts.length > 0 && (
-          <div className="products">
-            {visibleProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={onAddToCart}
-                onViewProduct={setSelectedProduct}
-              />
-            ))}
+          <>
+            <div className="products">
+              {visibleProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={onAddToCart}
+                  onViewProduct={setSelectedProduct}
+                />
+              ))}
+            </div>
 
-             <ProductModal
-               product={selectedProduct}
-               onClose={() => setSelectedProduct(null)}
-               onAddToCart={onAddToCart}
-              />
-          </div>
+            <ProductModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+              onAddToCart={onAddToCart}
+            />
+          </>
         )}
       </section>
 
