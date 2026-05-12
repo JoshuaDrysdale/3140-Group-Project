@@ -106,19 +106,20 @@ module.exports = {
     return data;
   },
 
-  updateUser: async (id, { name, email }) => {
+  updateUser: async (id, { name, email, role }) => {
     const updates = {};
     if (name) updates.name = name;
     if (email) updates.email = email;
-
+    if (role) updates.role = role;
     const { data, error } = await supabase
       .from('users')
       .update(updates)
       .eq('id', id)
-      .select('id, name, email, created_at')
+      .select('id, name, email, role, created_at')
       .single();
-
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     return data;
   },
 
