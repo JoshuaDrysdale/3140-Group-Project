@@ -1,12 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
+import ProductModal from './ProductModal';
 
 export default function SubCategory({ onAddToCart }) {
   const { id } = useParams(); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // 1. Added error state
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -51,9 +53,16 @@ export default function SubCategory({ onAddToCart }) {
               key={product.id} 
               product={product} 
               onAddToCart={onAddToCart} 
+              onViewProduct={setSelectedProduct}
             />
           ))}
         </div>
+
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={onAddToCart}
+        />
       </div>
     );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ProductCard.css";
 
-export default function ReviewSection({ product }) {
+export default function ReviewSection({ product, canReview = true }) {
     const [reviews, setReviews] = useState([]);
     const [userName, setUserName] = useState("");
     const [rating, setRating] = useState("5");
@@ -53,32 +53,38 @@ export default function ReviewSection({ product }) {
                 {average ? `${average} ★ average (${reviews.length})` : "No reviews yet"}
             </p>
 
-            <form onSubmit={handleSubmit} className="review-form">
-                <input
-                    type="text"
-                    placeholder="Your name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    required
-                />
+            {canReview ? (
+                <form onSubmit={handleSubmit} className="review-form">
+                    <input
+                        type="text"
+                        placeholder="Your name"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        required
+                    />
 
-                <select value={rating} onChange={(e) => setRating(e.target.value)}>
-                     <option value="5">5 Stars</option>
-                     <option value="4">4 Stars</option>
-                     <option value="3">3 Stars</option>
-                     <option value="2">2 Stars</option>
-                     <option value="1">1 Star</option>
-                </select>
+                    <select value={rating} onChange={(e) => setRating(e.target.value)}>
+                        <option value="5">5 Stars</option>
+                         <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                         <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                 </select>
 
-                <textarea
-                    placeholder="Write a review..."
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    required
-                />
+                    <textarea
+                        placeholder="Write a review..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        required
+                 />
 
-                <button type="submit">Post Review</button>
-            </form>
+                    <button type="submit">Post Review</button>
+                </form>
+                ) : (
+                    <p className="review-locked">
+                     Purchase this item to leave a review!
+                    </p>
+             )}
 
             <div className="review-list">
                 {reviews.map((review) => (

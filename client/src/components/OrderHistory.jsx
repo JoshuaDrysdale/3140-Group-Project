@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './OrderHistory.css';
+import ReviewSection from './ReviewSection';
 
 export default function OrderHistory({ user }) {
   const [orders, setOrders] = useState([]);
@@ -68,10 +69,20 @@ export default function OrderHistory({ user }) {
                 {/* We saved items as JSONB, so we can map through them here */}
                 {order.items && order.items.map((item, index) => (
                   <div key={index} className="history-item">
-                    <span>{item.name} (x{item.qty})</span>
-                    <span>${(item.price * item.qty).toFixed(2)}</span>
-                  </div>
-                ))}
+                   <div>
+                     <span>{item.name} (x{item.qty})</span>
+                     <span>${(item.price * item.qty).toFixed(2)}</span>
+                    </div>
+
+                 <ReviewSection
+                    product={{
+                      id: item.id || item.product_id,
+                      name: item.name || item.product_name
+                    }}
+                    canReview={true}
+                  />
+                </div>
+              ))}
               </div>
             </div>
           ))}
