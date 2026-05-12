@@ -1,5 +1,6 @@
 import './AdminDashboard.css';
 import { useState, useEffect } from 'react';
+import GroupDashboard from './Dashboard';     // Import their file
 
 function AdminOrdersView() {
   const [orders, setOrders] = useState([]);
@@ -66,17 +67,17 @@ function AdminOrdersView() {
                 <td>{order.users?.email || 'N/A'}</td>
                 <td>${Number(order.total_amount).toFixed(2)}</td>
                 <td>
-                <select 
-                    className="status-select"
-                    value={order.status} 
-                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                >
-                    <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-                </td>
+                    <select 
+                        className="status-select"
+                        value={order.status} 
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                    >
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    </td>
               </tr>
             ))}
           </tbody>
@@ -128,8 +129,9 @@ export default function AdminDashboard({ user }) {
 
         <main className="admin-main-content">
           {activeTab === 'orders' && <AdminOrdersView />}
-          {activeTab === 'products' && <AdminProductsView />}
-          {activeTab === 'users' && <AdminUsersView />}
+          {(activeTab === 'products' || activeTab === 'users') && (
+          <GroupDashboard user={user} initialTab={activeTab} />
+        )}
         </main>
       </div>
     </div>

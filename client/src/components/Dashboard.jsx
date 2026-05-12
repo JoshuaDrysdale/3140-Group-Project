@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import './Dashboard.css';
 
-export default function Dashboard({ user }) {
-  const [activeTab, setActiveTab] = useState('products');
+
+
+export default function Dashboard({ user, initialTab }) {
+  const [activeTab, setActiveTab] = useState(initialTab || 'products');
   const [products, setProducts] = useState([]);
   const [users, setUsers] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -13,6 +15,10 @@ export default function Dashboard({ user }) {
     fetchProducts();
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
 
   const fetchProducts = async () => {
     const res = await fetch('/api/products');
@@ -86,16 +92,27 @@ const saveProduct = async (product) => {
 
   return (
     <div className="dashboard">
-      <div className="dash-header">
+      {/* <div className="dash-header">
         <h1>🛠️ Admin Dashboard</h1>
-        <p>Welcome, {user.name}</p>
-      </div>
+        <p>Welcome, {user.name}</p> */}
+      {/* </div> */}
 
       {message.text && <p className="dash-message" style={{ color: message.color }}>{message.text}</p>}
 
       <div className="dash-tabs">
-        <button className={activeTab === 'products' ? 'active' : ''} onClick={() => setActiveTab('products')}>Products ({products.length})</button>
-        <button className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>Users ({users.length})</button>
+        {/* Only show Products button if products is the active tab */}
+        {activeTab === 'products' && (
+          <button className="active">
+            Products ({products.length})
+          </button>
+        )}
+
+        {/* Only show Users button if users is the active tab */}
+        {activeTab === 'users' && (
+          <button className="active">
+            Users ({users.length})
+          </button>
+        )}
       </div>
 
       {activeTab === 'products' && (
