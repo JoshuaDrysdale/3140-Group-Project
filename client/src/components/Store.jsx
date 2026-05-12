@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import ProductCard from './ProductCard';
 import './Store.css';
+import ProductModal from './ProductModal';
 
 export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
   const [products, setProducts] = useState([]);
@@ -8,6 +9,7 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [productError, setProductError] = useState(null);
   const [sortBy, setSortBy] = useState('default');
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -104,8 +106,15 @@ export default function Store({ onAddToCart, searchQuery, onSearchChange }) {
                 key={product.id}
                 product={product}
                 onAddToCart={onAddToCart}
+                onViewProduct={setSelectedProduct}
               />
             ))}
+
+             <ProductModal
+               product={selectedProduct}
+               onClose={() => setSelectedProduct(null)}
+               onAddToCart={onAddToCart}
+              />
           </div>
         )}
       </section>
