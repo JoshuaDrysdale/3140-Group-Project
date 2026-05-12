@@ -41,8 +41,8 @@ export default function Navbar({
         )}
         <button className="cart-btn" onClick={onCartClick}>
           Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-        </button>
-        <button className="profile-nav-btn" onClick={() => {
+        {/* </button> */}
+        {/* <button className="profile-nav-btn" onClick={() => {
           if (user.isGuest) {
             onLogout();
           } else if (user.role === 'admin') {
@@ -50,8 +50,8 @@ export default function Navbar({
           } else {
             navigate('/profile');
           }
-        }}>
-          {user.role === 'admin' ? '🛠️ Dashboard' : '👤 Profile'}
+        }}> */}
+          {/* {user.role === 'admin' ? '🛠️ Dashboard' : '👤 Profile'} */}
         </button>
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
