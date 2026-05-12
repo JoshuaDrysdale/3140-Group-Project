@@ -40,10 +40,14 @@ export default function Navbar({
         <button className="profile-nav-btn" onClick={() => {
           if (user.isGuest) {
             onLogout();
+          } else if (user.role === 'admin') {
+            navigate('/dashboard');
           } else {
             navigate('/profile');
           }
-        }}>👤 Profile</button>
+        }}>
+          {user.role === 'admin' ? '🛠️ Dashboard' : '👤 Profile'}
+        </button>
         <button className="logout-btn" onClick={onLogout}>Logout</button>
       </div>
     </nav>
