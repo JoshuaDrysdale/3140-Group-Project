@@ -190,4 +190,16 @@
   gap: 10px;
 }
 
+.admin-dashboard-link {
+  background-color: #ff4757; 
+  color: white !important;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s;
+}
 
+.admin-dashboard-link:hover {
+  background-color: #e84118;
+}

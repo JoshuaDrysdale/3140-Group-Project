@@ -140,6 +140,7 @@ app.post("/api/login", async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
       created_at: user.created_at
     };
 
@@ -263,6 +264,28 @@ app.post("/api/reviews", async (req, res) => {
   } catch (error) {
     console.error("Create Review Error:", error.message);
     res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/api/admin/orders", async (req, res) => {
+  try {
+    const orders = await db.getAllOrdersAdmin();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.patch("/api/admin/orders/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedOrder = await db.updateOrderStatus(id, status);
+    res.json(updatedOrder);
+  } catch (err) {
+    console.error("Error updating status:", err.message);
+    res.status(500).json({ error: "Failed to update order status" });
   }
 });
 

@@ -98,7 +98,7 @@ module.exports = {
   getUserByEmail: async (email) => {
     const { data, error } = await supabase
       .from('users')
-      .select('id,name,email,password_hash,created_at')
+      .select('id,name,email,password_hash,role,created_at')
       .eq('email', email)
       .maybeSingle();
 
@@ -120,5 +120,32 @@ module.exports = {
 
     if (error) throw error;
     return data;
+  },
+
+getAllOrdersAdmin: async () => {
+    const { data, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        users (
+          name,
+          email
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  },
+
+  updateOrderStatus: async (orderId, newStatus) => {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId)
+      .select();
+
+    if (error) throw error;
+    return data[0]; // Return the updated order
   }
 };

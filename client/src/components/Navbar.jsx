@@ -34,6 +34,11 @@ export default function Navbar({
       <div className="navbar-right">
         <span className="navbar-user">Hi, {user.name}</span>
         <Link to="/history" className="nav-link">My Orders</Link>
+        {user?.role === 'admin' && (
+          <Link to="/admin" className="admin-dashboard-link">
+            Admin Panel
+          </Link>
+        )}
         <button className="cart-btn" onClick={onCartClick}>
           Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </button>
