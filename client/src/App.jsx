@@ -10,6 +10,7 @@ import Checkout from './components/Checkout';
 import SubCategory from './components/SubCategory';
 import OrderConfirmation from './components/OrderConfirmation';
 import OrderHistory from './components/OrderHistory';
+import Dashboard from './components/Dashboard';
 
 import './App.css';
 
@@ -170,6 +171,7 @@ function AppRoutes({
           <Route path="/sub-categories/:id" element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} />
           <Route path="/history" element={user ? <OrderHistory user={user} /> : <Navigate to="/" />} />
           <Route path="/order-confirmation" element={user ? <OrderConfirmation user={user} /> : <Navigate to="/" />} />
+          <Route path="/dashboard" element={user?.role === 'admin' ? <Dashboard user={user} /> : <Navigate to="/" />} />
         </Routes>
       </div>
     );

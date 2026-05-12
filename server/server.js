@@ -140,6 +140,7 @@ app.post("/api/login", async (req, res) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
       created_at: user.created_at
     };
 
@@ -264,6 +265,56 @@ app.post("/api/reviews", async (req, res) => {
     console.error("Create Review Error:", error.message);
     res.status(500).json({ error: error.message });
   }
+});
+
+//admin routes 
+app.get('/api/admin/users', async (req, res) => {
+  if (req.headers['x-user-role'] !== 'admin'){
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const { data, error } = await db.supabase.from('users').select('id,name,email,role,created_at');
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.json(data);
+});
+
+app.delete('/api/admin/users/:id', async (req, res) => {
+  if (req.headers['x-user-role'] !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
+  const { error } = await db.supabase.from('users').delete().eq('id', req.params.id);
+
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+
+  res.json({ message: 'User deleted.' });
+});
+
+app.put('/api/admin/products/:id', async (req, res) => {
+  if (req.headers['x-user-role'] !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  const { name, price, stock_quantity } = req.body;
+  console.log('Updating product:', req.params.id, { name, price, stock_quantity });
+  const { data, error } = await db.supabase
+    .from('products')
+    .update({ 
+      name, 
+      price: Number(price), 
+      stock_quantity: Number(stock_quantity)
+    })
+    .eq('id', Number(req.params.id));
+  console.log('Supabase result:', data, error);
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+  res.json({ message: 'Product updated.' });
 });
 
 // SPA Middleware: Keeps React Router working on refresh
