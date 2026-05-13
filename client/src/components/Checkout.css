@@ -11,8 +11,8 @@
 
 .checkout-modal {
   width: min(980px, 100%);
-  max-height: 90vh;
-  overflow: hidden;
+  max-height: 90vh; /* Keeps the modal on screen */
+  overflow: hidden; /* Prevents the whole modal from scrolling weirdly */
   background: #ffffff;
   border-radius: 24px;
   box-shadow: 0 32px 80px rgba(17, 54, 82, 0.18);
@@ -25,7 +25,8 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px 32px 0;
+  padding: 28px 32px 16px; /* Slightly reduced bottom padding */
+  flex-shrink: 0; /* Prevents header from squishing */
 }
 
 .checkout-header h2 {
@@ -48,20 +49,24 @@
   color: #0f314a;
   background: #f5f9fc;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .checkout-body {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 24px;
-  overflow: hidden;
-  padding: 24px 32px 32px;
+  padding: 0 32px 32px;
+  overflow-y: auto; /* THIS ALLOWS SCROLLING INSIDE THE MODAL */
+  min-height: 0; /* Important for grid scrolling */
 }
 
+/* Ensure the sections don't collapse too much */
 .checkout-section {
   background: #f8fbfd;
   border-radius: 22px;
   padding: 22px;
+  height: fit-content; /* Allows background to wrap content */
 }
 
 .order-summary h3,
@@ -137,6 +142,13 @@
   background: #ffffff;
   color: #0f314a;
   font-size: 14px;
+  font-family: inherit;
+}
+
+/* Fixes the textarea being too huge by default */
+.checkout-form textarea {
+  resize: vertical;
+  min-height: 80px; 
 }
 
 .checkout-row {
@@ -162,6 +174,11 @@
   font-weight: 900;
   cursor: pointer;
   margin-top: 6px;
+  transition: opacity 0.2s;
+}
+
+.place-order-btn:hover {
+  opacity: 0.9;
 }
 
 @media (max-width: 900px) {
@@ -173,9 +190,15 @@
 @media (max-width: 560px) {
   .checkout-modal {
     border-radius: 18px;
+    max-height: 95vh;
   }
 
   .checkout-header {
     flex-direction: column;
+    padding: 20px 20px 10px;
+  }
+  
+  .checkout-body {
+      padding: 0 20px 20px;
   }
 }
