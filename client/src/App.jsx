@@ -170,10 +170,11 @@ function AppRoutes({
           <Route path="/" element={user ? <Navigate to="/store" /> : <Login onLogin={setUser} />} />
           <Route path="/store" element={user ? <Store onAddToCart={addToCart} searchQuery={searchQuery} onSearchChange={setSearchQuery} /> : <Navigate to="/" />} />
           <Route path="/sub-categories/:id" element={user ? <SubCategory onAddToCart={addToCart} /> : <Navigate to="/" />} />
-          <Route path="/history" element={user ? <OrderHistory user={user} /> : <Navigate to="/" />} />
+          <Route path="/history" element={user ? <OrderHistory user={user} onAddToCart={addToCart} /> : <Navigate to="/" />} />
           <Route path="/order-confirmation" element={user ? <OrderConfirmation user={user} /> : <Navigate to="/" />} />
           <Route path="/admin" element={user?.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/store" replace />} />
           <Route path="/dashboard" element={user?.role === 'admin' ? <Dashboard user={user} /> : <Navigate to="/" />} />
+          <Route path="/history" element={user ? <OrderHistory user={user} onAddToCart={addToCart} /> : <Navigate to="/" />} />
         </Routes>
       </div>
     );

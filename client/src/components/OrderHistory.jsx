@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 import './OrderHistory.css';
+import './Cart'
 import ReviewSection from './ReviewSection';
 
-export default function OrderHistory({ user }) {
+export default function OrderHistory({ user, onAddToCart }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleReorder = (orderItems) => {
+    // orderItems is the JSON array of products from your DB
+    orderItems.forEach(item => {
+      onAddToCart(item);
+    });
+    alert("Items from this order added to your cart!");
+  };
   useEffect(() => {
     // 🛑 THE GUARD: If user is null or id is 'undefined', stop here!
     if (!user || !user.id || user.id === 'undefined') {
@@ -32,7 +40,7 @@ export default function OrderHistory({ user }) {
 
   if (loading) return <div className="history-loader">Loading your orders...</div>;
 
-  return (
+return (
     <div className="history-page">
       <h1>Order History</h1>
       {orders.length === 0 ? (
@@ -63,26 +71,34 @@ export default function OrderHistory({ user }) {
                   <span className="order-label">Order #</span>
                   <p className="order-value">{order.id.slice(0, 8).toUpperCase()}</p>
                 </div>
+
+                {/* THE REORDER BUTTON - Moved here to cover the whole order */}
+                <button 
+                  className="reorder-btn" 
+                  onClick={() => handleReorder(order.items)}
+                >
+                  🔄 Reorder
+                </button>
               </div>
               
               <div className="order-items">
-                {/* We saved items as JSONB, so we can map through them here */}
                 {order.items && order.items.map((item, index) => (
-                  <div key={index} className="history-item">
-                   <div>
-                     <span>{item.name} (x{item.qty})</span>
-                     <span>${(item.price * item.qty).toFixed(2)}</span>
+                  <div key={index} className="history-item-container">
+                    <div className="history-item">
+                       <span className="item-details">{item.name} (x{item.qty})</span>
+                       <span className="item-price">${(item.price * item.qty).toFixed(2)}</span>
                     </div>
 
-                 <ReviewSection
-                    product={{
-                      id: item.id || item.product_id,
-                      name: item.name || item.product_name
-                    }}
-                    canReview={true}
-                  />
-                </div>
-              ))}
+                    {/* Keep reviews attached to each specific item */}
+                    <ReviewSection
+                        product={{
+                          id: item.id || item.product_id,
+                          name: item.name || item.product_name
+                        }}
+                        canReview={true}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           ))}

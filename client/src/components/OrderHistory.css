@@ -28,8 +28,11 @@
     background: #f8f9fa;
     padding: 15px 25px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    /* Added a 5th column for the button */
+    grid-template-columns: repeat(4, 1fr) auto; 
+    align-items: center;
     border-bottom: 1px solid #e1e8ed;
+    gap: 15px;
 }
 
 .order-label {
@@ -46,12 +49,42 @@
     margin: 0;
 }
 
+/* REORDER BUTTON STYLES */
+.reorder-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #ffffff;
+    color: #3b82f6;
+    border: 1.5px solid #3b82f6;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Keeps text on one line */
+}
+
+.reorder-btn:hover {
+    background-color: #3b82f6;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.reorder-btn:active {
+    transform: translateY(0);
+}
+
 .status-badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 13px;
     font-weight: bold;
+    text-align: center;
+    width: fit-content;
 }
 
 /* Dynamic colors for status */

@@ -34,11 +34,11 @@ export default function Navbar({
       <div className="navbar-right">
         <span className="navbar-user">Hi, {user.name}</span>
         <Link to="/history" className="nav-link">My Orders</Link>
-        {user?.role === 'admin' && (
+        {/* {user?.role === 'admin' && (
           <Link to="/admin" className="admin-dashboard-link">
             Admin Panel
           </Link>
-        )}
+        )} */}
         <button className="cart-btn" onClick={onCartClick}>
           Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
         </button>
@@ -56,12 +56,12 @@ export default function Navbar({
         {!user?.isGuest && (
           <button className="profile-nav-btn" onClick={() => {
             if (user.role === 'admin') {
-              navigate('/dashboard');
+              navigate('/admin');
             } else {
               navigate('/profile');
             }
           }}>
-            {user.role === 'admin' ? '🛠️ Dashboard' : '👤 Profile'}
+            {user.role === 'admin' ? '🛠️ Admin Dashboard' : '👤 Profile'}
           </button>
         )}
         {user?.isGuest ? (
