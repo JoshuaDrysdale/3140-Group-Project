@@ -111,29 +111,35 @@
   font-size: 12px;
 }
 
-.logout-btn {
+.logout-btn,
+.profile-nav-btn,
+.signin-btn {
   padding: 0 12px;
   color: #eaf7ff;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  height: 38px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
 }
 
 .profile-nav-btn {
-  background: transparent;
-  color: #f0f2f5;
-  border: 1.5px solid #f0f2f5;
-  border-radius: 6px;
-  padding: 0.3rem 0.85rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s;
+  /* match the existing sign-in/logout button style */
 }
 
-.profile-nav-btn:hover {
-  background: #f5c518;
-  border-color: #f5c518;
-  color: #1a1d2e;
+.profile-nav-btn:hover,
+.signin-btn:hover,
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+.signin-btn:hover,
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
 }
 
 @media (max-width: 850px) {
